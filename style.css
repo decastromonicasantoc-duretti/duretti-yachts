@@ -162,6 +162,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 .site-footer { min-height: 76px; display: flex; justify-content: space-between; align-items: center; gap: 18px; padding: 18px 6.2%; border-top: 1px solid var(--line); color: #929694; font-size: 9px; }
 .footer-brand { color: var(--paper); }
+.footer-social-links { display: flex; align-items: center; gap: 10px; }
+.footer-social-links a { display: flex; width: 16px; height: 16px; align-items: center; justify-content: center; }
+.footer-social-links img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.footer-social-links a:focus-visible { outline: 1px solid var(--orange); outline-offset: 3px; }
 .back-top { color: var(--paper); }
 .back-top:hover { color: var(--orange); }
 .reveal { opacity: 0; transform: translateY(17px); transition: opacity .65s ease, transform .65s ease; }
@@ -344,6 +348,7 @@ button { color: inherit; }
 .footer-brand { flex: 0 0 auto; color: var(--paper); font-size: 10px; }
 .site-footer > span:nth-child(1) { display: none; }
 .site-footer > span:nth-child(2) { margin-left: auto; }
+.footer-social-links { flex: 0 0 auto; }
 .album-modal { z-index: 20; }
 .image-viewer { z-index: 30; }
 
