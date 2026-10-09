@@ -65,24 +65,46 @@ document.querySelector('.site-nav').addEventListener('keydown', (event) => {
 
 const slideshowLayers = [...document.querySelectorAll('.hero-slide')];
 const slideshowCount = document.querySelector('.hero-slide-count');
-const slideshowSources = ['feature.png', 'feature1.png', 'feature2.png', 'feature3.png', 'feature4.png', 'feature5.png'];
-const availableSlides = ['feature.png'];
+const desktopSlideshowSources = ['feature.png', 'feature1.png', 'feature2.png', 'feature3.png', 'feature4.png', 'feature5.png'];
+const mobileViewport = window.matchMedia('(max-width: 760px)');
+let slideshowSources = [];
+let availableSlides = [];
 let currentSlide = 0;
 let activeSlideLayer = 0;
 let slideshowTimer;
+let slideshowDiscoveryToken = 0;
 
-function startSlideshowDiscovery(index = 1) {
+function startSlideshowDiscovery(index = 1, token = slideshowDiscoveryToken) {
+	if (token !== slideshowDiscoveryToken) return;
 	if (index >= slideshowSources.length) {
 		if (availableSlides.length > 1) slideshowTimer = window.setInterval(showNextSlide, 6500);
 		return;
 	}
 	const probe = new Image();
 	probe.onload = () => {
+		if (token !== slideshowDiscoveryToken) return;
 		availableSlides.push(slideshowSources[index]);
-		startSlideshowDiscovery(index + 1);
+		startSlideshowDiscovery(index + 1, token);
 	};
-	probe.onerror = () => startSlideshowDiscovery(index + 1);
+	probe.onerror = () => startSlideshowDiscovery(index + 1, token);
 	probe.src = slideshowSources[index];
+}
+
+function initializeSlideshow() {
+	window.clearInterval(slideshowTimer);
+	slideshowDiscoveryToken += 1;
+	slideshowSources = mobileViewport.matches
+		? ['mobile1.png', 'mobile2.png', ...desktopSlideshowSources.slice(2)]
+		: desktopSlideshowSources;
+	availableSlides = [slideshowSources[0]];
+	currentSlide = 0;
+	activeSlideLayer = 0;
+	slideshowLayers[0].src = slideshowSources[0];
+	slideshowLayers[0].classList.add('is-active');
+	slideshowLayers[1].removeAttribute('src');
+	slideshowLayers[1].classList.remove('is-active');
+	slideshowCount.textContent = `01 / 01`;
+	startSlideshowDiscovery(1, slideshowDiscoveryToken);
 }
 
 function showNextSlide() {
@@ -94,7 +116,8 @@ function showNextSlide() {
 	slideshowCount.textContent = `${String(currentSlide + 1).padStart(2, '0')} / ${String(availableSlides.length).padStart(2, '0')}`;
 }
 
-startSlideshowDiscovery();
+mobileViewport.addEventListener('change', initializeSlideshow);
+initializeSlideshow();
 
 function imagePath(number) {
 	return `featured works/${number}.png`;
