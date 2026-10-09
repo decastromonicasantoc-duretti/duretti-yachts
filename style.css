@@ -259,10 +259,10 @@ button { color: inherit; }
 .app-background { position: fixed; z-index: 0; inset: 0; overflow: hidden; pointer-events: none; }
 .app-background::before { position: absolute; inset: -5%; background: url("feature.png") center / cover no-repeat; content: ""; filter: blur(18px) brightness(.35); transform: scale(1.05); }
 .app-background::after { position: absolute; inset: 0; background: rgba(11,11,11,.75); content: ""; }
-.site-frame { position: relative; z-index: 1; display: grid; width: 100%; height: 100%; min-height: 0; grid-template-rows: 68px minmax(0, 1fr) 38px; overflow: hidden; border: 1px solid var(--orange); background: transparent; }
+.site-frame { position: relative; z-index: 1; display: grid; width: 100%; height: 100%; min-height: 0; grid-template-rows: 110px minmax(0, 1fr) 38px; overflow: hidden; border: 1px solid var(--orange); background: transparent; }
 .site-header { position: relative; inset: auto; z-index: 5; display: flex; min-width: 0; height: auto; align-items: center; gap: clamp(12px, 2.4vw, 38px); justify-content: space-between; padding: 0 clamp(13px, 2.4vw, 34px); border-bottom: 1px solid rgba(255,255,255,.13); background: rgba(8,10,11,.97); }
 .brand { flex: 0 0 auto; gap: 9px; }
-.logo { width: 30px; height: 30px; }
+.logo { width: 90px; height: 90px; }
 .brand-name { white-space: nowrap; font-size: 12px; }
 .brand-name span { font-size: 8px; letter-spacing: 1.3px; }
 .site-nav { display: flex; min-width: 0; height: 100%; flex: 1 1 auto; align-items: stretch; justify-content: flex-end; gap: clamp(4px, 1vw, 15px); overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
@@ -354,9 +354,9 @@ button { color: inherit; }
 
 @media (max-width: 760px) {
 	:root { --frame-space: 7px; }
-	.site-frame { grid-template-rows: 88px minmax(0, 1fr) 34px; }
-	.site-header { display: grid; grid-template-rows: 29px minmax(0, 1fr); align-content: center; gap: 2px; padding: 7px 10px 0; }
-	.logo { width: 22px; height: 22px; }
+	.site-frame { grid-template-rows: 110px minmax(0, 1fr) 34px; }
+	.site-header { display: grid; grid-template-rows: 66px minmax(0, 1fr); align-content: center; gap: 2px; padding: 7px 10px 0; }
+	.logo { width: 66px; height: 66px; }
 	.brand { gap: 7px; }
 	.brand-name { font-size: 10px; }
 	.site-nav { width: 100%; height: 100%; justify-content: flex-start; gap: 4px; margin: 0; }
