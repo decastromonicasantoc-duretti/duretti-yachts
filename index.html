@@ -15,10 +15,17 @@
 	</head>
 	<body class="is-preloading">
 		<div class="preloader" id="preloader" aria-hidden="true">
-			<video class="preloader-video" autoplay muted playsinline preload="auto" poster="public/assets/intro-poster.jpg">
-				<source src="public/assets/intro.mp4" type="video/mp4">
-			</video>
+			<video class="preloader-video" autoplay muted playsinline preload="auto"></video>
 		</div>
+		<script>
+			// Phones/portrait screens get the vertical intro; everything else gets the wide one
+			(function () {
+				var video = document.querySelector("#preloader video");
+				var mobile = window.matchMedia("(max-width: 768px), (orientation: portrait)").matches;
+				video.poster = mobile ? "public/assets/intro-mobile-poster.jpg" : "public/assets/intro-poster.jpg";
+				video.src = mobile ? "public/assets/intro-mobile.mp4" : "public/assets/intro.mp4";
+			})();
+		</script>
 		<div class="app-background" aria-hidden="true"></div>
 		<div class="site-frame">
 			<header class="site-header">

@@ -14,8 +14,7 @@
 	}
 
 	video.addEventListener('ended', finishIntro);   // normal case: video finished
-	video.addEventListener('error', finishIntro);   // video element error
-	video.querySelectorAll('source').forEach((source) => source.addEventListener('error', finishIntro)); // file missing (404)
+	video.addEventListener('error', finishIntro);   // file missing (404) or broken
 	if (video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) finishIntro(); // already failed to load
 	video.play().catch(finishIntro);                // autoplay blocked
 	setTimeout(finishIntro, 7000);                  // safety net for slow connections
