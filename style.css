@@ -314,7 +314,7 @@ button { color: inherit; }
 .hero-shade { background: linear-gradient(90deg, rgba(3,7,9,.82), rgba(3,7,9,.47) 39%, rgba(3,7,9,.02) 80%), linear-gradient(0deg, rgba(3,7,9,.52), transparent 28%); }
 .hero-copy { position: absolute; z-index: 1; top: auto; bottom: clamp(52px, 7vh, 72px); left: 9%; width: min(570px, 76%); margin: 0; transform: none; }
 .hero-copy h1, .view-heading h1, .contact-intro h1 { margin: 19px 0 14px; font: 400 68px/1.03 var(--serif); letter-spacing: 0; }
-.hero-copy h1 { max-width: 100%; margin: 12px 0 22px; font: 400 clamp(42px, 6vw, 82px)/1.03 var(--serif); }
+.hero-copy h1 { max-width: 100%; margin: 12px 0 22px; font: 400 clamp(21px, 3vw, 41px)/1.03 var(--serif); }
 .hero-copy h1 em, .view-heading h1 em, .contact-intro h1 em { color: var(--orange); font-weight: 400; }
 .hero-description { margin: 0 0 25px; color: #e0e1df; font-size: 12px; }
 .button { min-height: 42px; gap: 27px; padding: 0 16px; font-size: 10px; cursor: pointer; }
@@ -499,7 +499,7 @@ button { color: inherit; }
 	.nav-tab::after { right: 8px; left: 8px; }
 	.home-view { padding: 6px; }
 	.hero-copy { bottom: 48px; left: 12px; width: calc(100% - 24px); }
-	.hero-copy h1 { margin: 9px 0 15px; font-size: clamp(35px, 9vw, 54px); }
+	.hero-copy h1 { margin: 9px 0 15px; font-size: clamp(17.5px, 4.5vw, 27px); }
 	.hero-kicker { max-width: 280px; font-size: 7px; letter-spacing: 1.2px; }
 	.hero-description { max-width: 260px; font-size: 11px; }
 	.hero-meta { right: 13px; bottom: 12px; left: 13px; font-size: 7px; }
