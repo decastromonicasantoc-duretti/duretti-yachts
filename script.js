@@ -1,3 +1,23 @@
+// Intro video: plays on every page load/refresh, then reveals the site
+(function () {
+	const preloader = document.querySelector('#preloader');
+	const video = preloader && preloader.querySelector('video');
+	if (!preloader || !video) return;
+
+	let finished = false;
+	function finishIntro() {
+		if (finished) return;
+		finished = true;
+		preloader.classList.add('is-hidden');
+		document.body.classList.remove('is-preloading');
+		setTimeout(() => preloader.remove(), 700);
+	}
+
+	video.addEventListener('ended', finishIntro);   // normal case: video finished
+	video.addEventListener('error', finishIntro);   // file missing or broken
+	video.play().catch(finishIntro);                // autoplay blocked
+	setTimeout(finishIntro, 8000);                  // safety net for slow connections
+})();
 const views = [...document.querySelectorAll('[data-view-panel]')];
 const tabs = [...document.querySelectorAll('[data-view-target]')];
 const currentYear = document.querySelector('#current-year');
@@ -17,6 +37,21 @@ const viewerZoomIn = document.querySelector('.viewer-zoom-in');
 const viewerZoomOut = document.querySelector('.viewer-zoom-out');
 const viewerZoomReset = document.querySelector('.viewer-zoom-reset');
 const formStatus = document.querySelector('.form-status');
+
+async function sendInquiry(payload) {
+	const response = await fetch('/api/inquiry', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify(payload)
+	});
+	let result;
+	try {
+		result = await response.json();
+	} catch {
+		throw new Error('The inquiry service returned an invalid response. Please try again later.');
+	}
+	if (!response.ok) throw new Error(result.error || 'Your inquiry could not be sent. Please try again later.');
+}
 
 const albums = {
 	'777': { name: 'DURETTI 777', folder: '777', model: [1, 2, 3, 4], plans: [5, 6, 7, 8] },
@@ -396,23 +431,33 @@ document.addEventListener('keydown', (event) => {
 	}
 });
 
-document.querySelector('.inquiry-form').addEventListener('submit', (event) => {
+document.querySelector('.inquiry-form').addEventListener('submit', async (event) => {
 	event.preventDefault();
-	const fields = new FormData(event.currentTarget);
-	const body = [
-		`Name: ${fields.get('name')}`,
-		`Email: ${fields.get('email')}`,
-		`Phone: ${fields.get('phone')}`,
-		`Interest: ${fields.get('interest')}`,
-		'',
-		String(fields.get('message'))
-	].join('\n');
+	const form = event.currentTarget;
+	const fields = new FormData(form);
 	if (fields.get('consent') !== 'on') {
-		formStatus.textContent = 'Please consent to include these details before preparing the email draft.';
+		formStatus.textContent = 'Please consent before sending your inquiry.';
 		return;
 	}
-	formStatus.textContent = 'Your email app should open a draft. Review and send it yourself; this website has not submitted or stored your inquiry.';
-	window.location.href = `mailto:dan.daman@duretti-yachts.com?cc=${encodeURIComponent('selva@duretti-yachts.com')}&subject=${encodeURIComponent('DURETTI Yachts inquiry')}&body=${encodeURIComponent(body)}`;
+	const submitButton = form.querySelector('[type="submit"]');
+	submitButton.disabled = true;
+	formStatus.textContent = 'Sending your inquiry…';
+	try {
+		await sendInquiry({
+			type: 'contact',
+			name: fields.get('name'),
+			email: fields.get('email'),
+			phone: fields.get('phone'),
+			interest: fields.get('interest'),
+			message: fields.get('message')
+		});
+		formStatus.textContent = 'Thank you. Your inquiry has been sent to the DURETTI team.';
+		form.reset();
+	} catch (error) {
+		formStatus.textContent = error.message;
+	} finally {
+		submitButton.disabled = false;
+	}
 });
 
 const conciergePanel = document.querySelector('#concierge-panel');
@@ -563,30 +608,33 @@ document.querySelectorAll('[data-concierge-action]').forEach((button) => {
 		if (button.dataset.conciergeAction === 'quotation') openConciergeLead();
 	});
 });
-conciergeLead.addEventListener('submit', (event) => {
+conciergeLead.addEventListener('submit', async (event) => {
 	event.preventDefault();
 	const fields = new FormData(conciergeLead);
 	if (fields.get('consent') !== 'on') {
-		conciergeLeadStatus.textContent = 'Please confirm consent before preparing the email draft.';
+		conciergeLeadStatus.textContent = 'Please confirm consent before sending your inquiry.';
 		return;
 	}
-	const body = [
-		'Hello DURETTI team,',
-		'',
-		'I would like to discuss a yacht inquiry.',
-		`Name: ${fields.get('name')}`,
-		`Email: ${fields.get('email')}`,
-		`Country or region: ${fields.get('region') || 'Not provided'}`,
-		`Preferred yacht model: ${fields.get('model') || 'Not provided'}`,
-		`Intended use: ${fields.get('use') || 'Not provided'}`,
-		'Specifications or customization:',
-		String(fields.get('details') || 'Not provided'),
-		'',
-		'Please let me know the next steps.'
-	].join('\n');
-	const subject = fields.get('model') ? `DURETTI yacht inquiry - ${fields.get('model')}` : 'DURETTI yacht inquiry';
-	conciergeLeadStatus.textContent = 'Your email app should open a draft. Review and send it yourself; this website has not submitted or stored your inquiry.';
-	window.location.href = `mailto:dan.daman@duretti-yachts.com?cc=${encodeURIComponent('selva@duretti-yachts.com')}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+	const submitButton = conciergeLead.querySelector('[type="submit"]');
+	submitButton.disabled = true;
+	conciergeLeadStatus.textContent = 'Sending your inquiry…';
+	try {
+		await sendInquiry({
+			type: 'quotation',
+			name: fields.get('name'),
+			email: fields.get('email'),
+			region: fields.get('region'),
+			model: fields.get('model'),
+			use: fields.get('use'),
+			details: fields.get('details')
+		});
+		conciergeLeadStatus.textContent = 'Thank you. Your inquiry has been sent to the DURETTI team.';
+		conciergeLead.reset();
+	} catch (error) {
+		conciergeLeadStatus.textContent = error.message;
+	} finally {
+		submitButton.disabled = false;
+	}
 });
 
 if (window.visualViewport) {
@@ -595,46 +643,3 @@ if (window.visualViewport) {
 }
 window.addEventListener('resize', syncConciergeVisualViewport);
 showConciergeWelcome();
-
-
-document.addEventListener('submit', async (event) => {
-		const form = event.target;
-		if (!(form instanceof HTMLFormElement) || !form.matches('.inquiry-form, .concierge-lead')) return;
-		event.preventDefault();
-		event.stopImmediatePropagation();
-
-						  	const status = form.querySelector('.form-status, .concierge-lead-status');
-		const consent = form.querySelector('[name="consent"]');
-		if (!consent || !consent.checked) {
-					status.textContent = 'Please confirm consent before sending your inquiry.';
-					return;
-		}
-		const fields = new FormData(form);
-		const isContact = form.matches('.inquiry-form');
-		const payload = isContact
-			? { type: 'contact', name: fields.get('name'), email: fields.get('email'), phone: fields.get('phone'), interest: fields.get('interest'), message: fields.get('message') }
-					: { type: 'quotation', name: fields.get('name'), email: fields.get('email'), region: fields.get('region'), model: fields.get('model'), use: fields.get('use'), details: fields.get('details') };
-		const submitButton = form.querySelector('[type="submit"]');
-		submitButton.disabled = true;
-		status.textContent = 'Sending your inquiry…';
-		try {
-					const response = await fetch('/api/inquiry', {
-									method: 'POST',
-									headers: { 'Content-Type': 'application/json' },
-									body: JSON.stringify(payload)
-					});
-					let result;
-					try {
-									result = await response.json();
-					} catch {
-									throw new Error('The email service returned an invalid response. Please try again later.');
-					}
-					if (!response.ok) throw new Error(result.error || 'Your inquiry could not be sent. Please try again later.');
-					status.textContent = 'Thank you. Your inquiry has been sent to the DURETTI team.';
-					form.reset();
-		} catch (error) {
-					status.textContent = error.message || 'Your inquiry could not be sent. Please try again later.';
-		} finally {
-					submitButton.disabled = false;
-		}
-}, true);

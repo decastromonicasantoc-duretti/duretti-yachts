@@ -13,7 +13,12 @@
 		<link rel="stylesheet" href="style.css">
 		<script src="script.js" defer></script>
 	</head>
-	<body>
+	<body class="is-preloading">
+		<div class="preloader" id="preloader" aria-hidden="true">
+			<video class="preloader-video" autoplay muted playsinline preload="auto">
+				<source src="public/assets/raw%20file.duretti.mp4" type="video/mp4">
+			</video>
+		</div>
 		<div class="app-background" aria-hidden="true"></div>
 		<div class="site-frame">
 			<header class="site-header">
@@ -89,7 +94,7 @@
 						<label>Yacht / service interest<select name="interest" required><option value="" disabled selected>Select an interest</option><option>Yacht purchase</option><option>Day cruise</option><option>Working boat</option><option>Other inquiry</option></select></label>
 						<label class="message-field">Message<textarea name="message" rows="3" required></textarea></label>
 						<label class="inquiry-consent"><input name="consent" type="checkbox" required><span>I agree to send these details to DURETTI by email.</span></label>
-						<div class="form-submit"><p class="form-note">Your email app will open a draft to DURETTI. Review and send it yourself.</p><button class="button button-orange" type="submit">Prepare inquiry <span aria-hidden="true">↗</span></button></div>
+						<div class="form-submit"><p class="form-note">Your inquiry will be sent directly to the DURETTI team.</p><button class="button button-orange" type="submit">Send inquiry <span aria-hidden="true">↗</span></button></div>
 						<p class="form-status" aria-live="polite"></p>
 					</form></div>
 				</section>
