@@ -442,7 +442,7 @@ const conciergeFaq = [
 	},
 	{
 		question: 'How do I get pricing or request a quotation?',
-		answer: 'Pricing depends on the model, size, specifications, materials, and customization, and no prices are published here. Use “Request a quotation” below to prepare an email draft for the DURETTI team; review and send it from your email app.'
+		answer: 'Pricing depends on the model, size, specifications, materials, and customization, and no prices are published here. Use “Request a quotation” below to send your inquiry directly to the DURETTI team.'
 	},
 	{
 		question: 'What quality standards and warranty are stated?',
