@@ -3,12 +3,13 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="theme-color" content="#080a0b">
+		<meta name="theme-color" content="#080808">
 		<meta name="description" content="Explore Duretti Yachts: European marine engineering, bespoke craftsmanship and a 10-year vessel hull warranty.">
 		<title>Duretti Yachts | Built for Bigger Horizons</title>
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+		<link rel="icon" href="public/assets/logo/duretti-favicon.svg" type="image/svg+xml">
 		<link rel="stylesheet" href="style.css">
 		<script src="script.js" defer></script>
 	</head>
@@ -17,7 +18,7 @@
 		<div class="site-frame">
 			<header class="site-header">
 				<a class="brand" href="#home" data-view-link="home" aria-label="Duretti Yachts home">
-					<img src="logo2.png" alt="Duretti Yachts" class="logo">
+					<img src="public/assets/logo/duretti-logo.svg" alt="Duretti Yachts" class="logo">
 				</a>
 				<nav class="site-nav" aria-label="Main navigation" role="tablist">
 					<button class="nav-tab is-active" id="tab-home" type="button" role="tab" aria-selected="true" aria-controls="view-home" data-view-target="home">Home</button>
@@ -32,64 +33,156 @@
 				<section class="view home-view is-active" id="view-home" role="tabpanel" aria-labelledby="tab-home" data-view-panel="home">
 					<div class="home-visual" aria-label="Duretti Yachts on the water">
 						<div class="hero-slides" aria-hidden="true">
-							<img class="hero-slide is-active" src="feature.png" alt="">
+							<img class="hero-slide is-active" src="public/assets/images/hero-yacht-sunset.webp" alt="">
 							<img class="hero-slide" alt="">
 						</div>
 						<div class="hero-shade"></div>
 						<div class="hero-copy">
-							<h1>Feel the need for speed, powered by professional enthusiasm</h1>
-							<button class="button button-light" type="button" data-view-target="yachts">Explore the fleet</button>
+							<p class="eyebrow hero-kicker"><span class="eyebrow-line"></span> PREMIUM YACHTS. EXCEPTIONAL EXPERIENCES.</p>
+							<h1>Luxury on<br>the <em>Open Seas.</em></h1>
+							<button class="button button-light" type="button" data-view-target="yachts">Explore our yachts <span aria-hidden="true">→</span></button>
 						</div>
-						<div class="hero-meta"><span class="hero-slide-count">01 / 01</span><span>Built for bigger horizons</span></div>
 					</div>
 				</section>
 				<section class="view about-view" id="view-about" role="tabpanel" aria-labelledby="tab-about" data-view-panel="about" aria-hidden="true">
 					<div class="view-heading"><p class="eyebrow"><span class="eyebrow-line"></span> THE DURETTI STANDARD</p><h1>European craft.<br><em>Open horizons.</em></h1></div>
 					<div class="about-columns">
-						<article class="about-story glass-card"><span class="detail-label">FOUNDER &amp; HISTORY</span><p>Founded by Dan Daman, a Belgian national, DURETTI transitioned into owning its own shipyard while retaining its experienced staff and management.</p></article>
-						<article class="about-story glass-card"><span class="detail-label">EUROPEAN CRAFTSMANSHIP</span><p>Belgian and German marine engineering meets European interior design. State-of-the-art custom craftsmanship and worldwide materials are built to European standards in the UAE, at Umm Al Quwain and Abu Dhabi.</p></article>
+						<article class="about-story glass-card"><span class="detail-label">FOUNDER &amp; HISTORY</span><p>Founded by Dan Daman; now an independent shipyard.</p></article>
+						<article class="about-story glass-card"><span class="detail-label">EUROPEAN CRAFTSMANSHIP</span><p>European design. Belgian-German engineering, built in the UAE.</p></article>
 						<article class="about-warranty glass-card"><span class="stat-number">10</span><div><span class="detail-label">YEAR HULL WARRANTY</span><p>Ten years of confidence, built into every vessel hull.</p></div></article>
-						<article class="about-purpose mission glass-card"><div><span class="detail-label">OUR VISION</span><p class="quote">“Safe luxurious sailing.”</p></div><div class="mission-copy"><span class="detail-label">OUR MISSION</span><p>To become the leader in creating safe and secure working environments that enable businesses' freedom at sea and on shore.</p></div></article>
-						<article class="about-feature glass-card"><img src="aboutfeature.png" data-fallback-src="feature1.png" alt="Duretti yacht cruising at sea"></article>
+						<article class="about-purpose mission glass-card"><div><span class="detail-label">OUR VISION</span><p class="quote">“Safe luxurious sailing.”</p></div><div class="mission-copy"><span class="detail-label">OUR MISSION</span><p>Safer work at sea and on shore.</p></div></article>
+						<article class="about-feature glass-card"><img src="public/assets/images/about-yacht-lifestyle.webp" alt="Duretti yacht cruising at sea"></article>
 					</div>
 				</section>
 				<section class="view yachts-view" id="view-yachts" role="tabpanel" aria-labelledby="tab-yachts" data-view-panel="yachts" aria-hidden="true">
 					<div class="view-heading compact-heading"><p class="eyebrow"><span class="eyebrow-line"></span> Designed to make waves</p><h1>Explore the <em>yachts.</em></h1></div>
 					<div class="project-grid">
-						<button class="project-card glass-card" type="button" data-album="777" aria-label="Open Duretti 777 album"><img src="featured works/1.png" alt="Duretti 777" loading="lazy"><span class="project-index">01 / PROJECT ALBUM</span><span class="project-title">DURETTI 777</span><span class="project-count">8 IMAGES <span aria-hidden="true">↗</span></span></button>
-						<button class="project-card glass-card" type="button" data-album="limo-47" aria-label="Open Duretti Limo 47 album"><img src="featured works/9.png" alt="Duretti Limo 47" loading="lazy"><span class="project-index">02 / PROJECT ALBUM</span><span class="project-title">DURETTI LIMO 47</span><span class="project-count">7 IMAGES <span aria-hidden="true">↗</span></span></button>
-						<button class="project-card glass-card" type="button" data-album="limo-54" aria-label="Open Duretti Limo 54 album"><img src="featured works/16.png" alt="Duretti Limo 54" loading="lazy"><span class="project-index">03 / PROJECT ALBUM</span><span class="project-title">DURETTI LIMO 54</span><span class="project-count">8 IMAGES <span aria-hidden="true">↗</span></span></button>
-						<button class="project-card glass-card" type="button" data-album="limo-59" aria-label="Open Duretti Limo 59 album"><img src="featured works/24.png" alt="Duretti Limo 59" loading="lazy"><span class="project-index">04 / PROJECT ALBUM</span><span class="project-title">DURETTI LIMO 59</span><span class="project-count">7 IMAGES <span aria-hidden="true">↗</span></span></button>
+						<button class="project-card glass-card" type="button" data-album="777" aria-label="Open Duretti 777 album"><img src="featured works/1.png" alt="Duretti 777" loading="lazy"><span class="project-title">DURETTI 777</span><span class="project-action">View album <span aria-hidden="true">↗</span></span></button>
+						<button class="project-card glass-card" type="button" data-album="limo-47" aria-label="Open Duretti Limo 47 album"><img src="featured works/9.png" alt="Duretti Limo 47" loading="lazy"><span class="project-title">DURETTI LIMO 47</span><span class="project-action">View album <span aria-hidden="true">↗</span></span></button>
+						<button class="project-card glass-card" type="button" data-album="limo-54" aria-label="Open Duretti Limo 54 album"><img src="featured works/16.png" alt="Duretti Limo 54" loading="lazy"><span class="project-title">DURETTI LIMO 54</span><span class="project-action">View album <span aria-hidden="true">↗</span></span></button>
+						<button class="project-card glass-card" type="button" data-album="limo-59" aria-label="Open Duretti Limo 59 album"><img src="featured works/24.png" alt="Duretti Limo 59" loading="lazy"><span class="project-title">DURETTI LIMO 59</span><span class="project-action">View album <span aria-hidden="true">↗</span></span></button>
 					</div>
 				</section>
 				<section class="view asset-view" id="view-cruises" role="tabpanel" aria-labelledby="tab-cruises" data-view-panel="cruises" aria-hidden="true">
 					<div class="view-heading compact-heading"><p class="eyebrow"><span class="eyebrow-line"></span> Find your way out</p><h1>Day <em>cruises.</em></h1></div>
-					<div class="asset-grid" data-asset-gallery="101" aria-label="Day cruise gallery"></div>
+					<div class="asset-grid" data-asset-gallery="cruises" aria-label="Day cruise gallery"></div>
 				</section>
 				<section class="view asset-view" id="view-working" role="tabpanel" aria-labelledby="tab-working" data-view-panel="working" aria-hidden="true">
 					<div class="view-heading compact-heading"><p class="eyebrow"><span class="eyebrow-line"></span> Made for the work</p><h1>Working <em>boats.</em></h1></div>
-					<div class="asset-grid" data-asset-gallery="201" aria-label="Working boats gallery"></div>
+					<div class="asset-grid" data-asset-gallery="working" aria-label="Working boats gallery"></div>
 				</section>
 				<section class="view contact-view" id="view-contact" role="tabpanel" aria-labelledby="tab-contact" data-view-panel="contact" aria-hidden="true">
-					<div class="contact-intro"><p class="eyebrow"><span class="eyebrow-line"></span> Your next chapter</p><h1>Let's set<br>a <em>course.</em></h1><a class="contact-phone" href="tel:09476956043">09476956043 <span aria-hidden="true">↗</span></a></div>
+					<div class="contact-intro">
+						<p class="eyebrow"><span class="eyebrow-line"></span> Your next chapter</p>
+						<h1>Let's set<br>a <em>course.</em></h1>
+						<a class="contact-phone" href="tel:09476956043">09476956043 <span aria-hidden="true">↗</span></a>
+						<p class="contact-location">Umm Al Quwain · Abu Dhabi, UAE</p>
+						<div class="contact-social-links" aria-label="Follow Duretti Yachts">
+							<a href="https://www.facebook.com/Durettiyachts/" target="_blank" rel="noopener noreferrer" aria-label="Duretti Yachts on Facebook"><img src="fblogo.png" alt=""> Facebook <span aria-hidden="true">↗</span></a>
+							<a href="https://www.instagram.com/durettiyachts" target="_blank" rel="noopener noreferrer" aria-label="Duretti Yachts on Instagram"><img src="ig.png" alt=""> Instagram <span aria-hidden="true">↗</span></a>
+						</div>
+					</div>
 					<div class="contact-form-card glass-card"><form class="inquiry-form">
 						<label>Name<input name="name" autocomplete="name" required></label>
 						<label>Email address<input name="email" type="email" autocomplete="email" required></label>
 						<label>Phone number<input name="phone" type="tel" autocomplete="tel" required></label>
 						<label>Yacht / service interest<select name="interest" required><option value="" disabled selected>Select an interest</option><option>Yacht purchase</option><option>Day cruise</option><option>Working boat</option><option>Other inquiry</option></select></label>
 						<label class="message-field">Message<textarea name="message" rows="3" required></textarea></label>
-						<div class="form-submit"><p class="form-note">Your email app will open with your inquiry ready to send.</p><button class="button button-orange" type="submit">Prepare inquiry <span aria-hidden="true">↗</span></button></div>
+						<label class="inquiry-consent"><input name="consent" type="checkbox" required><span>I agree to include these details in an email draft to DURETTI.</span></label>
+						<div class="form-submit"><p class="form-note">Your email app will open a draft to DURETTI. Review and send it yourself.</p><button class="button button-orange" type="submit">Prepare inquiry <span aria-hidden="true">↗</span></button></div>
 						<p class="form-status" aria-live="polite"></p>
 					</form></div>
 				</section>
 			</main>
 			<footer class="site-footer"><a class="footer-brand" href="#home" data-view-link="home">DURETTI <span>YACHTS</span></a><span>Built for bigger horizons.</span><span>© <span id="current-year"></span> Duretti Yachts</span><div class="footer-social-links"><a href="https://www.facebook.com/Durettiyachts/" target="_blank" rel="noopener noreferrer" aria-label="Duretti Yachts on Facebook"><img src="fblogo.png" alt=""></a><a href="https://www.instagram.com/durettiyachts" target="_blank" rel="noopener noreferrer" aria-label="Duretti Yachts on Instagram"><img src="ig.png" alt=""></a></div></footer>
 		</div>
-		<dialog class="album-modal glass-card" aria-labelledby="album-title">
-			<div class="modal-header"><div><span class="modal-kicker">DURETTI PROJECT ALBUM</span><h2 id="album-title"></h2></div><button class="icon-button album-close" type="button" aria-label="Close project album">×</button></div>
-			<div class="album-tabs" role="tablist" aria-label="Project image category"><button class="album-tab is-active" id="tab-model" type="button" role="tab" aria-selected="true" aria-controls="album-gallery" data-album-tab="model">Model <span></span></button><button class="album-tab" id="tab-plans" type="button" role="tab" aria-selected="false" aria-controls="album-gallery" data-album-tab="plans">Tech Specs <span></span></button></div>
-			<div class="album-gallery" id="album-gallery" role="tabpanel" aria-labelledby="tab-model"></div>
+		<dialog class="album-modal glass-card" aria-labelledby="album-title" aria-describedby="album-subtitle">
+			<header class="modal-header">
+				<div><span class="modal-kicker">THE DURETTI COLLECTION</span><h2 id="album-title"></h2><p class="modal-subtitle" id="album-subtitle">Model gallery &amp; technical specifications</p></div>
+				<button class="icon-button album-close" type="button" aria-label="Close yacht gallery">×</button>
+			</header>
+			<div class="album-tabs" role="tablist" aria-label="Yacht gallery">
+				<button class="album-tab is-active" id="tab-model" type="button" role="tab" aria-selected="true" aria-controls="album-gallery" data-album-tab="model" tabindex="0">MODEL</button>
+				<button class="album-tab" id="tab-plans" type="button" role="tab" aria-selected="false" aria-controls="spec-gallery" data-album-tab="plans" tabindex="-1">TECH SPECS</button>
+			</div>
+			<section class="album-gallery album-panel" id="album-gallery" role="tabpanel" aria-labelledby="tab-model" tabindex="0">
+				<div class="model-stage">
+					<button class="viewer-arrow model-prev" type="button" aria-label="Previous model image">←</button>
+					<button class="model-feature-button" type="button" aria-label="Enlarge featured model image"><img class="model-feature" alt=""></button>
+					<button class="viewer-arrow model-next" type="button" aria-label="Next model image">→</button>
+					<div class="model-caption" aria-live="polite"><span class="model-caption-text"></span><span class="model-counter"></span></div>
+				</div>
+				<div class="model-thumbnails" role="group" aria-label="Select a model image"></div>
+			</section>
+			<section class="spec-gallery album-panel" id="spec-gallery" role="tabpanel" aria-labelledby="tab-plans" tabindex="0" hidden></section>
 		</dialog>
-		<dialog class="image-viewer glass-card" aria-label="Full-screen image preview"><button class="icon-button viewer-close" type="button" aria-label="Close image preview">×</button><button class="viewer-arrow viewer-prev" type="button" aria-label="Previous image">←</button><figure class="viewer-figure"><img class="viewer-image" alt=""><figcaption class="viewer-caption" aria-live="polite"></figcaption></figure><button class="viewer-arrow viewer-next" type="button" aria-label="Next image">→</button></dialog>
+		<dialog class="image-viewer glass-card" aria-labelledby="viewer-caption">
+			<button class="icon-button viewer-close" type="button" aria-label="Close image viewer">×</button>
+			<div class="viewer-zoom-controls" role="group" aria-label="Image zoom controls">
+				<button class="viewer-zoom-out" type="button" aria-label="Zoom out">−</button>
+				<button class="viewer-zoom-reset" type="button" aria-label="Reset zoom">RESET</button>
+				<button class="viewer-zoom-in" type="button" aria-label="Zoom in">+</button>
+			</div>
+			<button class="viewer-arrow viewer-prev" type="button" aria-label="Previous image">←</button>
+			<figure class="viewer-figure"><img class="viewer-image" alt=""><figcaption class="viewer-caption" id="viewer-caption" aria-live="polite"></figcaption></figure>
+			<button class="viewer-arrow viewer-next" type="button" aria-label="Next image">→</button>
+		</dialog>
+		<aside class="concierge" aria-label="Duretti virtual yacht concierge">
+			<section class="concierge-panel" id="concierge-panel" role="dialog" aria-labelledby="concierge-title" aria-describedby="concierge-disclosure" hidden>
+				<header class="concierge-header">
+					<img class="concierge-logo" src="public/assets/logo/duretti-logo.svg" alt="">
+					<div class="concierge-heading">
+						<strong id="concierge-title">DURETTI CONCIERGE</strong>
+						<span>Your guide to the DURETTI collection</span>
+						<span class="concierge-availability" data-concierge-availability><i aria-hidden="true"></i><span>Checking setup</span></span>
+					</div>
+					<div class="concierge-header-actions">
+						<button class="concierge-icon-button concierge-new" type="button" aria-label="Start a new conversation" title="New conversation">↻</button>
+						<button class="concierge-icon-button concierge-close" type="button" aria-label="Minimize concierge">−</button>
+					</div>
+				</header>
+				<div class="concierge-body">
+					<div class="concierge-thread">
+						<ol class="concierge-messages" role="log" aria-label="Concierge conversation" aria-live="polite" aria-relevant="additions text"></ol>
+						<p class="concierge-setup-note" role="status" aria-live="polite" hidden>The live AI concierge is not connected on this website yet. For assistance now, contact the DURETTI team using the email option below.</p>
+						<div class="concierge-typing" role="status" aria-live="polite" hidden><span></span><span></span><span></span><span class="concierge-typing-label">DURETTI Concierge is preparing a reply</span></div>
+						<div class="concierge-quick-actions" aria-label="Inquiry options">
+							<button type="button" data-concierge-action="quotation">Request a quotation</button>
+							<button type="button" data-concierge-action="specifications">Request technical specifications</button>
+							<a href="mailto:dan.daman@duretti-yachts.com?cc=selva%40duretti-yachts.com">Contact the DURETTI team</a>
+						</div>
+					</div>
+					<form class="concierge-lead" hidden>
+						<div class="concierge-form-heading">
+							<button class="concierge-back" type="button">← Back to chat</button>
+							<h3>Prepare an inquiry</h3>
+							<p>Your email app will open with a draft addressed to the DURETTI team. Review it and send it yourself; this website will not submit or store it.</p>
+						</div>
+						<div class="concierge-form-fields">
+							<label>Name <span>*</span><input name="name" autocomplete="name" maxlength="100" required></label>
+							<label>Email address <span>*</span><input name="email" type="email" autocomplete="email" maxlength="254" required></label>
+							<label>Country or region<input name="region" autocomplete="country-name" maxlength="100"></label>
+							<label>Preferred yacht model<input name="model" maxlength="100" placeholder="e.g. DURETTI 777"></label>
+							<label class="concierge-form-wide">Intended use<input name="use" maxlength="200" placeholder="Private, commercial, fishing, day cruising..."></label>
+							<label class="concierge-form-wide">Specifications or customization<textarea name="details" rows="3" maxlength="1200" placeholder="Share any preferred size, layout, finishes, or other requirements."></textarea></label>
+						</div>
+						<label class="concierge-consent"><input name="consent" type="checkbox" required><span>I agree to include these details in an email draft to DURETTI. Optional fields may be left blank.</span></label>
+						<button class="concierge-submit" type="submit">Prepare email draft <span aria-hidden="true">↗</span></button>
+						<p class="concierge-lead-status" role="status" aria-live="polite"></p>
+					</form>
+					<p class="concierge-disclosure" id="concierge-disclosure">If the AI service is connected, your message and recent chat context are sent to its configured provider to generate a reply. Please do not share sensitive information.</p>
+				</div>
+				<form class="concierge-composer">
+					<label class="visually-hidden" for="concierge-input">Ask the DURETTI Concierge</label>
+					<textarea id="concierge-input" name="message" rows="1" maxlength="1600" placeholder="Ask about yachts, design, or ownership…" required></textarea>
+					<button class="concierge-send" type="submit" aria-label="Send message" title="Send message"><span aria-hidden="true">↑</span></button>
+				</form>
+			</section>
+			<button class="concierge-launcher" type="button" aria-label="Ask DURETTI" aria-expanded="false" aria-controls="concierge-panel" title="Ask DURETTI">
+				<img src="public/assets/logo/duretti-logo.svg" alt="" aria-hidden="true">
+				<span class="concierge-launcher-icon" aria-hidden="true">✦</span>
+				<span class="concierge-tooltip">Ask DURETTI</span>
+			</button>
+		</aside>
 	</body>
 </html>
