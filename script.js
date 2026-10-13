@@ -417,114 +417,62 @@ document.querySelector('.inquiry-form').addEventListener('submit', (event) => {
 
 const conciergePanel = document.querySelector('#concierge-panel');
 const conciergeLauncher = document.querySelector('.concierge-launcher');
-const conciergeAvailability = document.querySelector('[data-concierge-availability]');
 const conciergeMessages = document.querySelector('.concierge-messages');
-const conciergeTyping = document.querySelector('.concierge-typing');
-const conciergeComposer = document.querySelector('.concierge-composer');
-const conciergeInput = document.querySelector('#concierge-input');
-const conciergeSend = document.querySelector('.concierge-send');
 const conciergeNewButton = document.querySelector('.concierge-new');
 const conciergeBody = document.querySelector('.concierge-body');
 const conciergeLead = document.querySelector('.concierge-lead');
 const conciergeLeadStatus = document.querySelector('.concierge-lead-status');
-const conciergeSetupNote = document.querySelector('.concierge-setup-note');
-const conciergeWelcome = "Welcome to DURETTI Yachts. I'm your virtual yacht concierge, here to help you explore our collection, understand our customization options, and find the right vessel for your needs.\n\nWhat would you like to discover today?";
-const conciergePrompts = [
-	['Explore Our Yacht Models', 'Which yacht models are featured, and where can I explore the models shown on this website?'],
-	['Compare Yacht Options', 'How should I choose between DURETTI yacht options for my intended use?'],
-	['Customization & Design', 'What customization and interior design options can I discuss with DURETTI?'],
-	['Warranty & Quality', 'What does DURETTI say about its quality standards, safety, and hull warranty?'],
-	['Request a Quotation', 'I would like to request a yacht quotation. What details should I prepare?']
+const conciergeWelcome = 'Welcome to DURETTI Yachts. Select a question below to explore our collection, customization options, and ownership information.';
+const conciergeFaq = [
+	{
+		question: 'Which yacht models can I explore on this website?',
+		answer: 'The website features detailed galleries for DURETTI 777, LIMO 47, LIMO 54, and LIMO 59. Open the Yachts tab to view their photographs and available technical drawings.'
+	},
+	{
+		question: 'What types and sizes of vessels does DURETTI offer?',
+		answer: 'The brochure describes a range from smaller fishing vessels to luxury motor yachts, with sizes from 22 to 295 feet depending on model and project. This brochure-wide range does not mean every size is a standard production model.'
+	},
+	{
+		question: 'Where are DURETTI vessels manufactured?',
+		answer: 'DURETTI manufactures its boats in the United Arab Emirates, with facilities in Umm Al Quwain and Abu Dhabi.'
+	},
+	{
+		question: 'Can I customize a yacht?',
+		answer: 'DURETTI offers customization options, including design, interior, finish, material, and layout preferences. What is possible depends on the selected model and project; contact the team to discuss your requirements.'
+	},
+	{
+		question: 'How do I get pricing or request a quotation?',
+		answer: 'Pricing depends on the model, size, specifications, materials, and customization, and no prices are published here. Use “Request a quotation” below to prepare an email draft for the DURETTI team; review and send it from your email app.'
+	},
+	{
+		question: 'What quality standards and warranty are stated?',
+		answer: 'DURETTI states that its vessels are manufactured according to European quality standards. The brochure states a 10-year hull warranty; confirm the full terms, coverage, exclusions, and conditions directly with the company.'
+	},
+	{
+		question: 'Where can I request technical specifications?',
+		answer: 'Available general arrangement plans are in the Yachts section. For additional or model-specific technical information, use “Email for technical specifications” below to prepare a message to the DURETTI team.'
+	},
+	{
+		question: 'How do I contact the DURETTI team?',
+		answer: 'Email dan.daman@duretti-yachts.com or selva@duretti-yachts.com. Duretti Boats Manufacturing L.L.C. is listed at P.O. Box No. 4896, Umm Al Quwain, United Arab Emirates.'
+	}
 ];
-let conciergeHistory = [];
-let conciergeIsSending = false;
-
-function setConciergeStatus(isConfigured, state = 'unavailable') {
-	conciergeAvailability.classList.toggle('is-configured', isConfigured);
-	conciergeAvailability.classList.toggle('is-unavailable', state === 'unavailable');
-	conciergeAvailability.querySelector('span').textContent = isConfigured ? 'AI setup detected' : state === 'checking' ? 'Checking setup' : 'AI service not connected';
-	conciergeSetupNote.hidden = isConfigured || state === 'checking';
-}
-
-async function checkConciergeConfiguration() {
-	setConciergeStatus(false, 'checking');
-	if (window.location.protocol === 'file:') {
-		setConciergeStatus(false);
-		return;
-	}
-	const controller = new AbortController();
-	const timeout = window.setTimeout(() => controller.abort(), 5000);
-	try {
-		const response = await fetch('api/concierge', { method: 'GET', cache: 'no-store', headers: { Accept: 'application/json' }, signal: controller.signal });
-		const result = await response.json();
-		setConciergeStatus(response.ok && result.configured === true);
-	} catch {
-		setConciergeStatus(false);
-	} finally {
-		window.clearTimeout(timeout);
-	}
-}
 
 function scrollConcierge(force = false) {
 	const distanceFromBottom = conciergeMessages.scrollHeight - conciergeMessages.scrollTop - conciergeMessages.clientHeight;
 	if (force || distanceFromBottom < 100) conciergeMessages.scrollTop = conciergeMessages.scrollHeight;
 }
 
-function resizeConciergeInput() {
-	conciergeInput.style.height = 'auto';
-	conciergeInput.style.height = `${Math.min(120, Math.max(42, conciergeInput.scrollHeight))}px`;
-}
-
-function addConciergeMessage(role, content, options = {}) {
+function addConciergeMessage(role, content) {
 	const wasNearBottom = conciergeMessages.scrollHeight - conciergeMessages.scrollTop - conciergeMessages.clientHeight < 100;
 	const item = document.createElement('li');
-	item.className = `concierge-message is-${role}${options.error ? ' is-error' : ''}`;
+	item.className = `concierge-message is-${role}`;
 	const bubble = document.createElement('p');
 	bubble.className = 'concierge-message-bubble';
 	bubble.textContent = content;
 	item.append(bubble);
-
-	if (role === 'assistant' && !options.welcome) {
-		const tools = document.createElement('div');
-		tools.className = 'concierge-message-tools';
-		if (options.error) {
-			const retry = document.createElement('button');
-			retry.type = 'button';
-			retry.textContent = 'Try again';
-			retry.setAttribute('aria-label', 'Retry sending your last question');
-			retry.addEventListener('click', () => {
-				item.remove();
-				sendConciergeMessage(options.retryMessage, options.userMessage, true);
-			});
-			tools.append(retry);
-		} else {
-			const copy = document.createElement('button');
-			copy.type = 'button';
-			copy.textContent = 'Copy answer';
-			copy.setAttribute('aria-label', 'Copy this concierge answer');
-			copy.addEventListener('click', async () => {
-				try {
-					await navigator.clipboard.writeText(content);
-					copy.textContent = 'Copied';
-				} catch {
-					copy.textContent = 'Copy unavailable';
-				}
-			});
-			tools.append(copy);
-			if (options.followupPrompt) {
-				const followup = document.createElement('button');
-				followup.type = 'button';
-				followup.textContent = 'Ask a follow-up';
-				followup.setAttribute('aria-label', `Ask a follow-up: ${options.followupPrompt}`);
-				followup.addEventListener('click', () => sendConciergeMessage(options.followupPrompt));
-				tools.append(followup);
-			}
-		}
-		item.append(tools);
-	}
-
 	conciergeMessages.append(item);
-	scrollConcierge(role === 'user' || wasNearBottom || options.welcome);
+	scrollConcierge(role === 'user' || wasNearBottom);
 	return item;
 }
 
@@ -536,12 +484,12 @@ function showConciergeWelcome() {
 	greeting.textContent = conciergeWelcome;
 	const suggestions = document.createElement('div');
 	suggestions.className = 'concierge-suggestions';
-	suggestions.setAttribute('aria-label', 'Suggested questions');
-	conciergePrompts.forEach(([label, prompt]) => {
+	suggestions.setAttribute('aria-label', 'Frequently asked questions');
+	conciergeFaq.forEach((entry) => {
 		const button = document.createElement('button');
 		button.type = 'button';
-		button.textContent = label;
-		button.addEventListener('click', () => sendConciergeMessage(prompt));
+		button.textContent = entry.question;
+		button.addEventListener('click', () => showConciergeAnswer(entry));
 		suggestions.append(button);
 	});
 	item.append(greeting, suggestions);
@@ -549,28 +497,16 @@ function showConciergeWelcome() {
 	scrollConcierge(true);
 }
 
-function conciergeFollowUp(message) {
-	const question = message.toLowerCase();
-	if (/\b(price|pricing|cost|quote|quotation|purchase|buy|financ\w*|payment)\b/.test(question)) {
-		return 'What details should I prepare for a yacht quotation request?';
-	}
-	if (/\b(custom|interior|layout|finish|material|design)\b/.test(question)) {
-		return 'What customization preferences should I discuss with the DURETTI team?';
-	}
-	if (/\b(warranty|safety|quality|resale|value)\b/.test(question)) {
-		return 'Which warranty or safety details should I confirm directly with DURETTI?';
-	}
-	if (/\b(model|compare|size|feet|boat|yacht|vessel)\b/.test(question)) {
-		return 'What information should I consider when choosing a DURETTI model?';
-	}
-	return 'What technical specifications can I request from the DURETTI team?';
+function showConciergeAnswer(entry) {
+	addConciergeMessage('user', entry.question);
+	addConciergeMessage('assistant', entry.answer);
 }
 
 function openConcierge() {
 	conciergePanel.hidden = false;
 	conciergeLauncher.setAttribute('aria-expanded', 'true');
 	conciergePanel.closest('.concierge').classList.add('is-open');
-	conciergeInput.focus();
+	conciergeMessages.querySelector('.concierge-suggestions button')?.focus();
 	syncConciergeVisualViewport();
 }
 
@@ -581,7 +517,6 @@ function closeConcierge() {
 	conciergePanel.closest('.concierge').classList.remove('is-open');
 	conciergeLead.hidden = true;
 	conciergeBody.classList.remove('is-form');
-	conciergeComposer.hidden = false;
 	syncConciergeVisualViewport();
 	conciergeLauncher.focus();
 }
@@ -589,7 +524,6 @@ function closeConcierge() {
 function openConciergeLead() {
 	conciergeLead.hidden = false;
 	conciergeBody.classList.add('is-form');
-	conciergeComposer.hidden = true;
 	conciergeLeadStatus.textContent = '';
 	conciergeLead.querySelector('[name="name"]').focus();
 }
@@ -597,8 +531,7 @@ function openConciergeLead() {
 function closeConciergeLead() {
 	conciergeLead.hidden = true;
 	conciergeBody.classList.remove('is-form');
-	conciergeComposer.hidden = false;
-	conciergeInput.focus();
+	conciergeMessages.querySelector('.concierge-suggestions button')?.focus();
 }
 
 function syncConciergeVisualViewport() {
@@ -613,91 +546,21 @@ function syncConciergeVisualViewport() {
 	conciergePanel.style.setProperty('--concierge-visual-height', `${viewport.height}px`);
 }
 
-async function sendConciergeMessage(rawMessage, existingUserMessage = null, isRetry = false) {
-	const message = String(rawMessage || '').trim();
-	if (!message || conciergeIsSending) return;
-	const userMessage = existingUserMessage || addConciergeMessage('user', message);
-	conciergeInput.value = '';
-	resizeConciergeInput();
-	conciergeIsSending = true;
-	conciergeSend.disabled = true;
-	conciergeNewButton.disabled = true;
-	conciergeTyping.hidden = false;
-	conciergeInput.readOnly = true;
-	conciergeMessages.setAttribute('aria-busy', 'true');
-	const shouldScroll = conciergeMessages.scrollHeight - conciergeMessages.scrollTop - conciergeMessages.clientHeight < 140;
-	if (shouldScroll || isRetry) scrollConcierge(true);
-
-	const controller = new AbortController();
-	const timeout = window.setTimeout(() => controller.abort(), 25000);
-	try {
-		if (window.location.protocol === 'file:') {
-			throw new Error('The live AI concierge needs the website to be hosted with its /api/concierge endpoint. You can contact the DURETTI team using the email option below.');
-		}
-		const response = await fetch('api/concierge', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-			body: JSON.stringify({ message, history: conciergeHistory.slice(-8) }),
-			signal: controller.signal
-		});
-		const result = await response.json().catch(() => null);
-		if (!response.ok) {
-			if (response.status === 404 || response.status >= 500) setConciergeStatus(false);
-			throw new Error(typeof result?.error === 'string' ? result.error : 'The concierge service is not configured at this website address. Please contact the DURETTI team using the email option below.');
-		}
-		if (typeof result?.answer !== 'string' || !result.answer.trim()) throw new Error('The concierge returned an unreadable reply. Please try again or contact the DURETTI team.');
-		conciergeHistory.push({ role: 'user', content: message }, { role: 'assistant', content: result.answer });
-		conciergeHistory = conciergeHistory.slice(-8);
-		addConciergeMessage('assistant', result.answer, { followupPrompt: conciergeFollowUp(message) });
-	} catch (error) {
-		if (error.name === 'AbortError' || error instanceof TypeError) setConciergeStatus(false);
-		const errorMessage = error.name === 'AbortError'
-			? 'The reply took too long. Please try again or contact the DURETTI team.'
-			: error instanceof TypeError
-				? 'The live AI service could not be reached. No inquiry has been submitted or stored by this website. You can contact the DURETTI team using the email option below.'
-				: error.message || 'The AI service could not be reached. No inquiry has been submitted or stored by this website. You can email the DURETTI team using the contact option below.';
-		addConciergeMessage('assistant', errorMessage, { error: true, retryMessage: message, userMessage });
-	} finally {
-		window.clearTimeout(timeout);
-		conciergeIsSending = false;
-		conciergeSend.disabled = false;
-		conciergeNewButton.disabled = false;
-		conciergeInput.readOnly = false;
-		conciergeTyping.hidden = true;
-		conciergeMessages.setAttribute('aria-busy', 'false');
-	}
-}
-
 conciergeLauncher.addEventListener('click', () => {
 	if (conciergePanel.hidden) openConcierge();
 	else closeConcierge();
 });
 document.querySelector('.concierge-close').addEventListener('click', closeConcierge);
 conciergeNewButton.addEventListener('click', () => {
-	conciergeHistory = [];
 	conciergeLead.reset();
 	closeConciergeLead();
 	showConciergeWelcome();
-	conciergeInput.focus();
+	conciergeMessages.querySelector('.concierge-suggestions button')?.focus();
 });
 document.querySelector('.concierge-back').addEventListener('click', closeConciergeLead);
-conciergeComposer.addEventListener('submit', (event) => {
-	event.preventDefault();
-	sendConciergeMessage(conciergeInput.value);
-});
-conciergeInput.addEventListener('keydown', (event) => {
-	if (event.key !== 'Enter' || event.shiftKey || event.isComposing) return;
-	event.preventDefault();
-	conciergeComposer.requestSubmit();
-});
-conciergeInput.addEventListener('input', resizeConciergeInput);
 document.querySelectorAll('[data-concierge-action]').forEach((button) => {
 	button.addEventListener('click', () => {
-		if (button.dataset.conciergeAction === 'quotation') {
-			openConciergeLead();
-			return;
-		}
-		sendConciergeMessage('Please help me request technical specifications for a DURETTI yacht. What information should I provide?');
+		if (button.dataset.conciergeAction === 'quotation') openConciergeLead();
 	});
 });
 conciergeLead.addEventListener('submit', (event) => {
@@ -732,4 +595,3 @@ if (window.visualViewport) {
 }
 window.addEventListener('resize', syncConciergeVisualViewport);
 showConciergeWelcome();
-checkConciergeConfiguration();

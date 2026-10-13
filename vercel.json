@@ -1,9 +1,4 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "outputDirectory": ".",
-  "functions": {
-    "api/concierge.js": {
-      "maxDuration": 25
-    }
-  }
+  "outputDirectory": "."
 }

@@ -134,21 +134,20 @@
 					<div class="concierge-heading">
 						<strong id="concierge-title">DURETTI CONCIERGE</strong>
 						<span>Your guide to the DURETTI collection</span>
-						<span class="concierge-availability" data-concierge-availability><i aria-hidden="true"></i><span>Checking setup</span></span>
+						<span class="concierge-availability"><i aria-hidden="true"></i><span>Curated FAQs · Always available</span></span>
 					</div>
 					<div class="concierge-header-actions">
-						<button class="concierge-icon-button concierge-new" type="button" aria-label="Start a new conversation" title="New conversation">↻</button>
+						<button class="concierge-icon-button concierge-new" type="button" aria-label="Show FAQ questions" title="Show FAQ questions">↻</button>
 						<button class="concierge-icon-button concierge-close" type="button" aria-label="Minimize concierge">−</button>
 					</div>
 				</header>
 				<div class="concierge-body">
 					<div class="concierge-thread">
-						<ol class="concierge-messages" role="log" aria-label="Concierge conversation" aria-live="polite" aria-relevant="additions text"></ol>
-						<p class="concierge-setup-note" role="status" aria-live="polite" hidden>The live AI concierge is not connected on this website yet. For assistance now, contact the DURETTI team using the email option below.</p>
-						<div class="concierge-typing" role="status" aria-live="polite" hidden><span></span><span></span><span></span><span class="concierge-typing-label">DURETTI Concierge is preparing a reply</span></div>
+						<ol class="concierge-messages" role="log" aria-label="DURETTI frequently asked questions" aria-live="polite" aria-relevant="additions text"></ol>
+						<p class="concierge-disclosure" id="concierge-disclosure">Choose a question for a quick answer. For project-specific details, please contact the DURETTI team.</p>
 						<div class="concierge-quick-actions" aria-label="Inquiry options">
 							<button type="button" data-concierge-action="quotation">Request a quotation</button>
-							<button type="button" data-concierge-action="specifications">Request technical specifications</button>
+							<a href="mailto:dan.daman@duretti-yachts.com?cc=selva%40duretti-yachts.com&amp;subject=Technical%20specifications%20request&amp;body=Hello%20DURETTI%20team%2C%0A%0AI%20would%20like%20to%20request%20technical%20specifications.%0A%0APreferred%20model%3A%20%0AIntended%20use%3A%20%0A%0AThank%20you.">Email for technical specifications</a>
 							<a href="mailto:dan.daman@duretti-yachts.com?cc=selva%40duretti-yachts.com">Contact the DURETTI team</a>
 						</div>
 					</div>
@@ -170,18 +169,12 @@
 						<button class="concierge-submit" type="submit">Prepare email draft <span aria-hidden="true">↗</span></button>
 						<p class="concierge-lead-status" role="status" aria-live="polite"></p>
 					</form>
-					<p class="concierge-disclosure" id="concierge-disclosure">If the AI service is connected, your message and recent chat context are sent to its configured provider to generate a reply. Please do not share sensitive information.</p>
 				</div>
-				<form class="concierge-composer">
-					<label class="visually-hidden" for="concierge-input">Ask the DURETTI Concierge</label>
-					<textarea id="concierge-input" name="message" rows="1" maxlength="1600" placeholder="Ask about yachts, design, or ownership…" required></textarea>
-					<button class="concierge-send" type="submit" aria-label="Send message" title="Send message"><span aria-hidden="true">↑</span></button>
-				</form>
 			</section>
-			<button class="concierge-launcher" type="button" aria-label="Ask DURETTI" aria-expanded="false" aria-controls="concierge-panel" title="Ask DURETTI">
+			<button class="concierge-launcher" type="button" aria-label="DURETTI FAQs" aria-expanded="false" aria-controls="concierge-panel" title="DURETTI FAQs">
 				<img src="public/assets/logo/duretti-logo.svg" alt="" aria-hidden="true">
 				<span class="concierge-launcher-icon" aria-hidden="true">✦</span>
-				<span class="concierge-tooltip">Ask DURETTI</span>
+				<span class="concierge-tooltip">DURETTI FAQs</span>
 			</button>
 		</aside>
 	</body>
