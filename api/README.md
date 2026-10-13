@@ -17,4 +17,6 @@ Configure these **server-side** environment variables in the hosting platform:
 
 Without the deployed route and all required environment variables, `GET /api/concierge` reports `configured: false` and `POST /api/concierge` returns a setup error; the website then offers direct email links. No chat messages are logged or stored by this handler.
 
+GPT-5 and o-series reasoning models use `max_completion_tokens`; standard models use `max_tokens` and temperature. If the provider rejects the legacy parameter form, the function retries once with the compatible reasoning-model parameters. Environment-variable values are trimmed before use. Provider failures are logged with only the HTTP status and sanitized error code/type/parameter; credentials, raw provider messages, and visitor messages are not logged or returned. Responses distinguish credential, model/account access, usage-limit, and request-configuration errors without exposing provider details.
+
 The in-memory limit (20 messages per IP per 10 minutes) is a basic per-instance safeguard, not a replacement for Vercel's edge rate limiting. The hosting platform's `X-Forwarded-For` header is used as the rate-limit key.
