@@ -609,6 +609,7 @@ button { color: inherit; }
 	.view-heading h1 { font-size: 27px; }
 	.compact-heading h1 { font-size: 25px; }
 }
+
 /* ---------- Loading intro video ---------- */
 body.is-preloading { overflow: hidden; }
 
