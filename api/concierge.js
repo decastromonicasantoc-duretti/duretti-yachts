@@ -26,14 +26,73 @@ function send(res, statusCode, body) {
 }
 
 function configuration() {
-	const apiKey = process.env.OPENAI_API_KEY;
-	const model = process.env.OPENAI_MODEL;
-	const endpoint = process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1/chat/completions';
+	const apiKey = process.env.OPENAI_API_KEY?.trim();
+	const model = process.env.OPENAI_MODEL?.trim();
+	const endpoint = process.env.OPENAI_BASE_URL?.trim() || 'https://api.openai.com/v1/chat/completions';
 	let secureEndpoint = false;
 	try {
 		secureEndpoint = new URL(endpoint).protocol === 'https:';
 	} catch {}
 	return { apiKey, model, endpoint, available: Boolean(apiKey && model && secureEndpoint) };
+}
+
+function providerRequest(config, messages, signal) {
+	return fetch(config.endpoint, {
+		method: 'POST',
+		headers: { Authorization: `Bearer ${config.apiKey}`, 'Content-Type': 'application/json' },
+		body: JSON.stringify({
+			model: config.model,
+			max_completion_tokens: 700,
+			messages
+		}),
+		signal
+	});
+}
+
+async function providerErrorDetails(response) {
+	try {
+		const result = await response.json();
+		const error = result && result.error;
+		const code = error && typeof error.code === 'string' ? error.code : '';
+		const type = error && typeof error.type === 'string' ? error.type : '';
+		const param = error && typeof error.param === 'string' ? error.param : '';
+		const message = error && typeof error.message === 'string' ? error.message : '';
+		const unsupportedParameters = code === 'unsupported_parameter'
+			|| ['max_tokens', 'temperature'].includes(param)
+			|| /unsupported parameter.{0,40}(max_tokens|temperature)|parameter.{0,40}(max_tokens|temperature).{0,40}(not supported|unsupported)/i.test(message);
+		const safeValue = (value) => /^[a-zA-Z0-9_.-]{1,80}$/.test(value) ? value : '';
+		return {
+			status: response.status,
+			code: safeValue(code),
+			type: safeValue(type),
+			param: safeValue(param),
+			unsupportedParameters
+		};
+	} catch {
+		return { status: response.status, code: '', type: '', param: '', unsupportedParameters: false };
+	}
+}
+
+function providerFailure(details) {
+	console.error('DURETTI concierge provider request failed', {
+		status: details.status,
+		code: details.code,
+		type: details.type,
+		param: details.param
+	});
+	if (details.status === 401) {
+		return { error: 'The AI service credentials need attention. Please contact the DURETTI team.', code: 'provider_auth_error' };
+	}
+	if (details.status === 403 || details.status === 404) {
+		return { error: 'The configured AI model or account permissions need attention. Please contact the DURETTI team.', code: 'provider_model_error' };
+	}
+	if (details.status === 429) {
+		return { error: 'The AI service is busy or has reached its usage limit. Please try again later.', code: 'provider_limit_error' };
+	}
+	if (details.status === 400) {
+		return { error: 'The AI service configuration needs attention. Please contact the DURETTI team.', code: 'provider_request_error' };
+	}
+	return { error: 'The DURETTI AI service could not complete that reply. Please try again or contact the team directly.', code: 'provider_error' };
 }
 
 function clientKey(req) {
@@ -125,23 +184,38 @@ module.exports = async function conciergeHandler(req, res) {
 	const controller = new AbortController();
 	const timeout = setTimeout(() => controller.abort(), 20000);
 	try {
+		const messages = [
+			{ role: 'system', content: systemPrompt },
+			...history,
+			{ role: 'user', content: body.message.trim() }
+		];
 		const response = await fetch(config.endpoint, {
 			method: 'POST',
 			headers: { Authorization: `Bearer ${config.apiKey}`, 'Content-Type': 'application/json' },
 			body: JSON.stringify({
 				model: config.model,
-				temperature: 0.2,
-				max_tokens: 450,
-				messages: [
-					{ role: 'system', content: systemPrompt },
-					...history,
-					{ role: 'user', content: body.message.trim() }
-				]
+				...(/^(?:o[134](?:-|$)|gpt-5(?:[.-]|$))/i.test(config.model)
+					? { max_completion_tokens: 700 }
+					: { temperature: 0.2, max_tokens: 450 }),
+				messages
 			}),
 			signal: controller.signal
 		});
 		if (!response.ok) {
-			return send(res, 502, { error: 'The DURETTI AI service could not complete that reply. Please try again or contact the team directly.', code: 'provider_error' });
+			const details = await providerErrorDetails(response);
+			if (details.status === 400 && details.unsupportedParameters) {
+				const compatibleResponse = await providerRequest(config, messages, controller.signal);
+				if (!compatibleResponse.ok) {
+					return send(res, 502, providerFailure(await providerErrorDetails(compatibleResponse)));
+				}
+				const result = await compatibleResponse.json();
+				const answer = result.choices?.[0]?.message?.content;
+				if (typeof answer !== 'string' || !answer.trim()) {
+					return send(res, 502, { error: 'The DURETTI AI service returned an unreadable reply. Please try again or contact the team directly.', code: 'invalid_provider_response' });
+				}
+				return send(res, 200, { answer: answer.trim().slice(0, 6000) });
+			}
+			return send(res, 502, providerFailure(details));
 		}
 		const result = await response.json();
 		const answer = result.choices?.[0]?.message?.content;
@@ -153,6 +227,7 @@ module.exports = async function conciergeHandler(req, res) {
 		if (error.name === 'AbortError') {
 			return send(res, 504, { error: 'That reply took too long. Please try again or contact the DURETTI team directly.', code: 'timeout' });
 		}
+		console.error('DURETTI concierge provider request was unavailable', { name: error.name });
 		return send(res, 502, { error: 'The DURETTI AI service is temporarily unavailable. Please try again or contact the team directly.', code: 'provider_unavailable' });
 	} finally {
 		clearTimeout(timeout);
