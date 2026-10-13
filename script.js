@@ -1,23 +1,44 @@
-// Intro video: plays on every page load/refresh, then reveals the site
+// Intro video: plays on every page load/refresh, then reveals the site.
+// Troubleshooting: open the site with ?introdebug at the end of the address to see why the intro was skipped.
 (function () {
 	const preloader = document.querySelector('#preloader');
 	const video = preloader && preloader.querySelector('video');
 	if (!preloader || !video) return;
 
+	const debug = location.search.includes('introdebug');
 	let finished = false;
-	function finishIntro() {
-		if (finished) return;
-		finished = true;
+
+	function hideIntro() {
 		preloader.classList.add('is-hidden');
 		document.body.classList.remove('is-preloading');
 		setTimeout(() => preloader.remove(), 700);
 	}
 
-	video.addEventListener('ended', finishIntro);   // normal case: video finished
-	video.addEventListener('error', finishIntro);   // file missing (404) or broken
-	if (video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) finishIntro(); // already failed to load
-	video.play().catch(finishIntro);                // autoplay blocked
-	setTimeout(finishIntro, 7000);                  // safety net for slow connections
+	function finishIntro(reason) {
+		if (finished) return;
+		finished = true;
+		console.warn('[intro] finished:', reason);
+		if (debug && reason !== 'ended') {
+			const note = document.createElement('p');
+			note.style.cssText = 'position:absolute;left:16px;right:16px;bottom:24px;margin:0;padding:12px;background:rgba(0,0,0,.85);color:#fff;font:12px/1.5 monospace;word-break:break-all;';
+			note.textContent = 'Intro skipped: ' + reason
+				+ ' | file: ' + video.getAttribute('src')
+				+ ' | error code: ' + (video.error ? video.error.code : 'none')
+				+ ' | networkState: ' + video.networkState
+				+ ' | readyState: ' + video.readyState
+				+ ' | TAP TO CONTINUE';
+			preloader.append(note);
+			preloader.addEventListener('click', hideIntro, { once: true });
+			return;
+		}
+		hideIntro();
+	}
+
+	video.addEventListener('ended', () => finishIntro('ended'));
+	video.addEventListener('error', () => finishIntro('video-error (file missing or not playable)'));
+	if (video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) finishIntro('no-source');
+	video.play().catch((error) => finishIntro('play-blocked: ' + error.name));
+	setTimeout(() => finishIntro('timeout'), 7000);
 })();
 
 const views = [...document.querySelectorAll('[data-view-panel]')];
