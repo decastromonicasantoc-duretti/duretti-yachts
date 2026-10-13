@@ -595,3 +595,46 @@ if (window.visualViewport) {
 }
 window.addEventListener('resize', syncConciergeVisualViewport);
 showConciergeWelcome();
+
+
+document.addEventListener('submit', async (event) => {
+		const form = event.target;
+		if (!(form instanceof HTMLFormElement) || !form.matches('.inquiry-form, .concierge-lead')) return;
+		event.preventDefault();
+		event.stopImmediatePropagation();
+
+						  	const status = form.querySelector('.form-status, .concierge-lead-status');
+		const consent = form.querySelector('[name="consent"]');
+		if (!consent || !consent.checked) {
+					status.textContent = 'Please confirm consent before sending your inquiry.';
+					return;
+		}
+		const fields = new FormData(form);
+		const isContact = form.matches('.inquiry-form');
+		const payload = isContact
+			? { type: 'contact', name: fields.get('name'), email: fields.get('email'), phone: fields.get('phone'), interest: fields.get('interest'), message: fields.get('message') }
+					: { type: 'quotation', name: fields.get('name'), email: fields.get('email'), region: fields.get('region'), model: fields.get('model'), use: fields.get('use'), details: fields.get('details') };
+		const submitButton = form.querySelector('[type="submit"]');
+		submitButton.disabled = true;
+		status.textContent = 'Sending your inquiry…';
+		try {
+					const response = await fetch('/api/inquiry', {
+									method: 'POST',
+									headers: { 'Content-Type': 'application/json' },
+									body: JSON.stringify(payload)
+					});
+					let result;
+					try {
+									result = await response.json();
+					} catch {
+									throw new Error('The email service returned an invalid response. Please try again later.');
+					}
+					if (!response.ok) throw new Error(result.error || 'Your inquiry could not be sent. Please try again later.');
+					status.textContent = 'Thank you. Your inquiry has been sent to the DURETTI team.';
+					form.reset();
+		} catch (error) {
+					status.textContent = error.message || 'Your inquiry could not be sent. Please try again later.';
+		} finally {
+					submitButton.disabled = false;
+		}
+}, true);
