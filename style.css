@@ -490,7 +490,7 @@ button { color: inherit; }
 @media (max-width: 760px) {
 	:root { --frame-space: 7px; --footer-height: 38px; }
 	.site-frame { grid-template-rows: 74px minmax(0, 1fr) 38px; }
-	.site-header { display: grid; grid-template-rows: 35px 32px; align-content: center; gap: 1px; padding: 5px 9px 0; }
+	.site-header { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: 35px 32px; justify-content: stretch; align-content: center; gap: 1px; padding: 5px 9px 0; }
 	.logo { width: 122px; height: 33px; }
 	.brand { gap: 7px; }
 	.brand-name { font-size: 10px; }
